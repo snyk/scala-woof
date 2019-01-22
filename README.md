@@ -25,7 +25,7 @@ $ ./gradlew startWithAgent
 
 #### Then, run [snyk cli](https://snyk.io/docs/using-snyk/):
 ```text
-$ snyk monitor                                             master 130 [ 17:01 ]
+$ snyk monitor
 
 Monitoring java-woof...
 
