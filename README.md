@@ -32,7 +32,7 @@ Monitoring java-woof...
 Explore this snapshot at https://app.snyk.io/org/yall/project/4567901-2345-6789-0123-45678912345
 ```
 
-####Now, you can start the app with the agent:
+#### Now, you can start the app with the agent:
 ```text
 $ ./gradlew -PprojectId=4567901-2345-6789-0123-45678912345 startWithAgent
 ...
