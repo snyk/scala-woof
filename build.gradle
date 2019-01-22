@@ -1,0 +1,77 @@
+plugins {
+    id 'com.github.johnrengelman.shadow' version '2.0.4'
+    id 'de.undercouch.download' version '3.4.3'
+    id 'java'
+    id 'application'
+    id 'distribution'
+}
+
+mainClassName = 'io.snyk.woof.server.WoofApplication'
+
+dependencies {
+    compile 'net.lingala.zip4j:zip4j:1.3.2'
+    compile 'io.dropwizard:dropwizard-assets:1.3.8'
+    compile 'io.dropwizard:dropwizard-core:1.3.8'
+    compile 'io.dropwizard:dropwizard-forms:1.3.8'
+    compile 'com.google.guava:guava:27.0.1-jre'
+}
+
+build.dependsOn shadowJar
+distZip.dependsOn shadowJar
+
+task fetchAgent(type: Download) {
+    src 'https://static.snyk.io/resources/runtime/agent/java/snyk-java-runtime-agent.zip'
+    dest buildDir
+    overwrite false
+}
+
+task unpackAgent(type: Copy) {
+    from zipTree("${buildDir}/snyk-java-runtime-agent.zip")
+    into "${buildDir}"
+}
+
+task writeConfig() {
+    doLast {
+        if (!project.hasProperty("projectId")) {
+            throw new InvalidUserDataException("\n\nYou must specify a project ID.\n\n" +
+                    "Please run `snyk monitor`, and collect the id from the results' settings page," +
+                    "then re-run, for example:\n\n" +
+                    "   ./gradlew -PprojectId=4567901-2345-6789-0123-45678912345 startWithAgent")
+        }
+
+        new File("${buildDir}/snyk-java-runtime-agent/snyk-agent.properties")
+            .text = "projectId=${projectId}\n"
+    }
+}
+
+task startWithAgent(type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    main = mainClassName
+    jvmArgs("-javaagent:${buildDir}/snyk-java-runtime-agent/snyk-java-runtime-agent.jar")
+    args('server')
+}
+
+unpackAgent.dependsOn fetchAgent
+writeConfig.dependsOn unpackAgent
+startWithAgent.dependsOn writeConfig
+
+jar {
+    baseName = 'without-deps'
+}
+
+shadowJar {
+    mergeServiceFiles()
+
+    baseName = 'java-woof'
+    classifier = null
+    version = null
+}
+
+repositories {
+    mavenCentral()
+    jcenter()
+}
+
+wrapper {
+    gradleVersion = "4.10.3"
+}

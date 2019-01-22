@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
+          integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS"
+          crossorigin="anonymous">
+
+    <title>Snyk Zip Test</title>
+
+    <style type="text/css">
+        body {
+            font-size: 150%;
+        }
+
+        h2 {
+            margin-top: 1em;
+            margin-bottom: 1em;
+        }
+
+        .btn-primary {
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <div class="navbar navbar-dark bg-dark shadow-sm">
+        <div class="container d-flex justify-content-between">
+            <a href="#" class="navbar-brand d-flex align-items-center">
+                <strong>Snyk Demo Test Application</strong>
+            </a>
+        </div>
+    </div>
+</header>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-4">
+            <h2>Zip unzipper</h2>
+            <form id="unzip">
+                <div class="form-group">
+                    <label for="file">Select a file:</label>
+                    <input
+                            id="file"
+                            class="form-control-file"
+                            type="file"
+                            name="file"
+                            accept="application/zip,.zip"
+                    />
+                </div>
+                <button type="submit" class="btn btn-primary">Unzip!</button>
+            </form>
+            <hr/>
+            <div id="results"></div>
+        </div>
+        <div class="col-md-8">
+            <h2>What is this?</h2>
+            <p>This is a perfectly reasonable Java application.</p>
+            <p>Select a zip file (maybe someone gave you an example!),
+                and I will tell you about it.</p>
+        </div>
+    </div>
+</div>
+
+<script
+    src="https://code.jquery.com/jquery-3.3.1.min.js"
+    integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+    crossorigin="anonymous"></script>
+
+<script
+    src="https://cdnjs.cloudflare.com/ajax/libs/jquery.form/4.2.2/jquery.form.min.js"
+    integrity="sha256-2Pjr1OlpZMY6qesJM68t2v39t+lMLvxwpa8QlRjJroA="
+    crossorigin="anonymous"></script>
+
+<script>
+$('#unzip').ajaxForm({
+  url: '/api/unzip',
+  type: 'POST',
+  success: function(data) {
+    var res = $('#results').empty();
+    if (!data) {
+      res.append('Nothing found.');
+      return;
+    }
+    var list = $('<ul>').appendTo(res);
+    for (var record of data) {
+      list.append($('<li>').text(record));
+    }
+  }
+});
+</script>
+
+</body>
+</html>
