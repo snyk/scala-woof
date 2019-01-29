@@ -2,6 +2,7 @@ package io.snyk.woof.app;
 
 import com.google.common.io.ByteStreams;
 import com.google.common.io.MoreFiles;
+import com.google.common.io.RecursiveDeleteOption;
 import net.lingala.zip4j.core.ZipFile;
 
 import java.io.File;
@@ -35,7 +36,12 @@ public class ZipHandler {
                         .map(p -> p.getFileName().toString())
                         .collect(Collectors.toList());
             } finally {
-                MoreFiles.deleteRecursively(tempDir);
+                // The temporary directory only contains zip entries.
+                // Zip files do not support symlinks.
+                // Hence, this is safe. (For real!)
+                // Java 8 on OSX does not support secure deletion, so we have to
+                // disable security.
+                MoreFiles.deleteRecursively(tempDir, RecursiveDeleteOption.ALLOW_INSECURE);
             }
         } finally {
             if (!temp.delete()) {
