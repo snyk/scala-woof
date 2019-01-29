@@ -69,11 +69,15 @@ $ ./gradlew -PprojectId=4567901-2345-6789-0123-45678912345 startWithAgent
 ...
 ```
 
+This will set up a `snyk-agent.properties` containing your `projectId`,
+  and then start the application using the latest Snyk Java Runtime Agent. 
+
 
 #### Exploit!
 
 You can visit [the application](http://localhost:8080/), and
-exploit it by uploading a zip file, for example, the provided `zip-slip.zip`.
+exploit it by uploading a zip file. For example, you can try the
+[provided `zip-slip.zip`](https://github.com/snyk/zip-slip-vulnerability/tree/master/archives).
 
 Alternatively, you can upload from the command line, using:
 
