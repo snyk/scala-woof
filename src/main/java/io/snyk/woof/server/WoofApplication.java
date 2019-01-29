@@ -6,6 +6,7 @@ import io.dropwizard.forms.MultiPartBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import io.snyk.woof.app.ZipHandler;
+import io.snyk.woof.cli.CliUnzip;
 
 public class WoofApplication extends Application<WoofConfig> {
     public static void main(String[] args) throws Exception {
@@ -16,6 +17,7 @@ public class WoofApplication extends Application<WoofConfig> {
     public void initialize(Bootstrap<WoofConfig> bootstrap) {
         bootstrap.addBundle(new MultiPartBundle());
         bootstrap.addBundle(new AssetsBundle("/assets", "/", "index.html"));
+        bootstrap.addCommand(new CliUnzip());
     }
 
     @Override

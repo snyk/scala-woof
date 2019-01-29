@@ -3,11 +3,13 @@
 An intentionally vulnerable application, to test Snyk's
 Runtime Protection offering.
 
+
 ### How?
 
 Everything should drive from Gradle. You need `java` 8
 installed and working. On Windows, use `gradlew.bat` in
 place of `./gradlew`.
+
 
 #### First, check you can build:
 ```text
@@ -23,14 +25,16 @@ $ ./gradlew startWithAgent
 ...
 ```
 
+
 #### Then, run [snyk cli](https://snyk.io/docs/using-snyk/):
 ```text
 $ snyk monitor
 
 Monitoring java-woof...
 
-Explore this snapshot at https://app.snyk.io/org/yall/project/4567901-2345-6789-0123-45678912345
+Explore this snapshot at https://app.snyk.io/org/yall/project/4567901-2345-6789-0123-45679012345
 ```
+
 
 #### Now, you can start the app with the agent:
 ```text
@@ -48,6 +52,8 @@ $ ./gradlew -PprojectId=4567901-2345-6789-0123-45678912345 startWithAgent
 |                                                            |
 |  You can visit the application on http://localhost:8080/   |
 |                                                            |
+| You can try the supplied exploit with ./gradlew runExploit |
+|                                                            |
 |        You can stop the application with ctrl+c.           |
 |                                                            |
 `------------------------------------------------------------'
@@ -55,12 +61,23 @@ $ ./gradlew -PprojectId=4567901-2345-6789-0123-45678912345 startWithAgent
 ...
 ```
 
+
 #### Exploit!
 
 You can visit [the application](http://localhost:8080/), and
-exploit it by uploading a zip file.
+exploit it by uploading a zip file, for example, the provided `zip-slip.zip`.
 
-#### View results
+Alternatively, you can upload from the command line, using:
 
-If you then visit your Snyk project page again, you will see
-an alert that the method has been called in runtime.
+```text
+$ ./gradlew runExploit
+> Task :runExploit
+The file contains these entries:
+ * good.txt
+
+
+An exploit attempt has been made.
+```
+
+If your application is protected, then you should
+  shortly see the warning on [your Snyk dashboard](https://app.snyk.io/).

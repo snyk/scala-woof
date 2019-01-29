@@ -25,6 +25,8 @@ public class WelcomeBanner implements ServerLifecycleListener {
         System.out.println("|                                                            |");
         System.out.println("|  You can visit the application on http://localhost:" + getLocalPort(server) + "/   |");
         System.out.println("|                                                            |");
+        System.out.println("| You can try the supplied exploit with ./gradlew runExploit |");
+        System.out.println("|                                                            |");
         System.out.println("|        You can stop the application with ctrl+c.           |");
         System.out.println("|                                                            |");
         System.out.println("`------------------------------------------------------------'");
