@@ -6,20 +6,26 @@ Runtime Protection offering.
 
 ### How?
 
-Everything should drive from Gradle. You need `java` 8
-installed and working. On Windows, use `gradlew.bat` in
-place of `./gradlew`.
+Everything should drive from Gradle, which is bundled in this repository.
+
+You just need a Java JDK 8 or above, installed and working.
+
+The examples use `./gradlew` everywhere. On Windows, use `gradlew.bat` in place of `./gradlew`,
+for example, `gradlew.bat startWithAgent`.
 
 
 #### First, check you can build:
+
 ```text
 $ ./gradlew startWithAgent
 ...
 
   You must specify a project ID.
   
-  Please run `snyk monitor`, and collect the id from the results'
-    settings page,then re-run, for example:
+  Please run `snyk monitor`, collect the id from the results' settings page,
+    then re-run `startWithAgent` using that ID.
+
+  For example (you *must* change the projectId!):
 
      ./gradlew -PprojectId=4567901-2345-6789-0123-45678912345 startWithAgent
 ...
@@ -27,6 +33,7 @@ $ ./gradlew startWithAgent
 
 
 #### Then, run [snyk cli](https://snyk.io/docs/using-snyk/):
+
 ```text
 $ snyk monitor
 
@@ -37,6 +44,7 @@ Explore this snapshot at https://app.snyk.io/org/yall/project/4567901-2345-6789-
 
 
 #### Now, you can start the app with the agent:
+
 ```text
 $ ./gradlew -PprojectId=4567901-2345-6789-0123-45678912345 startWithAgent
 ...

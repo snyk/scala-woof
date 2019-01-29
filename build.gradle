@@ -37,8 +37,9 @@ task writeConfig() {
     doLast {
         if (!project.hasProperty("projectId")) {
             throw new InvalidUserDataException("\n\nYou must specify a project ID.\n\n" +
-                    "Please run `snyk monitor`, and collect the id from the results' settings page," +
-                    "then re-run, for example:\n\n" +
+                    "Please run `snyk monitor`, collect the id from the results' settings page,\n" +
+                    "  then re-run `startWithAgent` using that ID.\n\n" +
+                    "For example (you *must* change the projectId!):\n\n" +
                     "   ./gradlew -PprojectId=4567901-2345-6789-0123-45678912345 startWithAgent")
         }
 
