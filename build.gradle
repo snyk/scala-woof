@@ -43,9 +43,17 @@ task writeConfig() {
                     "   ./gradlew -PprojectId=4567901-2345-6789-0123-45678912345 startWithAgent")
         }
 
+        def output = "projectId=${projectId}\n"
+
+        if (project.hasProperty("verbose") && Boolean.parseBoolean(String.valueOf(project.property("verbose")))) {
+            output += "logTo=stderr\n"
+        }
+
         new File("${buildDir}/snyk-java-runtime-agent/snyk-agent.properties")
-            .text = "projectId=${projectId}\n"
+            .text = output
     }
+
+    outputs.upToDateWhen { false }
 }
 
 task startWithAgent(type: JavaExec) {
