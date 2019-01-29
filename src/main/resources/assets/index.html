@@ -24,6 +24,12 @@
         .btn-primary {
             width: 100%;
         }
+
+        .error {
+            border: 1px dashed red;
+            padding: 0.2em;
+            word-wrap: break-word;
+        }
     </style>
 </head>
 <body>
@@ -89,6 +95,16 @@ $('#unzip').ajaxForm({
     var list = $('<ul>').appendTo(res);
     for (var record of data) {
       list.append($('<li>').text(record));
+    }
+  },
+  error: function(xhr, textStatus, error) {
+    var res = $('#results').empty();
+    var err = $('<p>').attr('class', 'error').appendTo(res);
+
+    if (xhr.responseJSON && xhr.responseJSON.message) {
+      err.append(xhr.responseJSON.message);
+    } else {
+      err.append('An unknown error has occurred. Is the server running?');
     }
   }
 });

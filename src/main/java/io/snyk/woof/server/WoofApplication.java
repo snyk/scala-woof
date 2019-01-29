@@ -24,6 +24,7 @@ public class WoofApplication extends Application<WoofConfig> {
     public void run(WoofConfig configuration, Environment environment) throws Exception {
         environment.jersey().setUrlPattern("/api/*");
         environment.jersey().register(new UnzipResource(new ZipHandler()));
+        environment.jersey().register(new JsonExceptionMapper());
         environment.healthChecks().register("woof", new WoofCheck());
         environment.lifecycle().addServerLifecycleListener(new WelcomeBanner());
     }

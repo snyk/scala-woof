@@ -1,11 +1,13 @@
 package io.snyk.woof.cli;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.dropwizard.cli.Command;
 import io.dropwizard.setup.Bootstrap;
-import io.snyk.woof.app.ZipHandler;
 import net.sourceforge.argparse4j.inf.Namespace;
 import net.sourceforge.argparse4j.inf.Subparser;
+import org.apache.http.HeaderElement;
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
@@ -16,7 +18,7 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 
 import java.io.File;
-import java.io.FileInputStream;
+import java.io.IOException;
 
 public class CliUnzip extends Command {
     public CliUnzip() {
@@ -50,8 +52,10 @@ public class CliUnzip extends Command {
             post.setEntity(builder.build());
             HttpResponse response = client.execute(post);
             final int responseCode = response.getStatusLine().getStatusCode();
-            if (200 != responseCode) {
-                throw new IllegalStateException("invalid response, code: " + responseCode);
+
+            if (200 != responseCode || !contentTypeIsJson(response.getEntity())) {
+                showError(response);
+                return;
             }
 
             final String[] entries = new ObjectMapper().readValue(response.getEntity().getContent(), String[].class);
@@ -61,5 +65,32 @@ public class CliUnzip extends Command {
                 System.out.println(" * " + entry);
             }
         }
+    }
+
+    private void showError(HttpResponse response) throws IOException {
+        System.err.println("An error occurred. Please check the server's logs for more information.");
+        System.err.println();
+        final HttpEntity entity = response.getEntity();
+        if (contentTypeIsJson(entity)) {
+            final JsonNode root = new ObjectMapper().readTree(entity.getContent());
+            if (root.has("message")) {
+                System.err.println("The server says: " + root.get("message").textValue());
+            } else {
+                System.err.println("The server said something: " + root);
+            }
+        } else {
+            System.err.println("The server's response was not understood, response code: " +
+                    response.getStatusLine().getStatusCode());
+        }
+    }
+
+    private boolean contentTypeIsJson(HttpEntity entity) {
+        for (HeaderElement element : entity.getContentType().getElements()) {
+            if ("application/json".equals(element.getName())) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
