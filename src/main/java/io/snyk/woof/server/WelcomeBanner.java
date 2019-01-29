@@ -32,5 +32,6 @@ public class WelcomeBanner implements ServerLifecycleListener {
         System.out.println("`------------------------------------------------------------'");
         System.out.println();
         System.out.println();
+        System.out.println("The server is running. Status and logs will continue below:");
     }
 }
