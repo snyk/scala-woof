@@ -56,6 +56,12 @@ task writeConfig() {
     outputs.upToDateWhen { false }
 }
 
+task start(type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    main = mainClassName
+    args('server')
+}
+
 task startWithAgent(type: JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
     main = mainClassName
@@ -79,8 +85,10 @@ task runExploit(type: JavaExec) {
     }
 }
 
+fetchAgent.dependsOn build
 unpackAgent.dependsOn fetchAgent
 writeConfig.dependsOn unpackAgent
+start.dependsOn build
 startWithAgent.dependsOn writeConfig
 
 jar {
