@@ -2,6 +2,7 @@ plugins {
     id 'com.github.johnrengelman.shadow' version '2.0.4'
     id 'de.undercouch.download' version '3.4.3'
     id 'java'
+    id 'scala'
     id 'application'
     id 'distribution'
 }
@@ -9,6 +10,8 @@ plugins {
 mainClassName = 'io.snyk.woof.server.WoofApplication'
 
 dependencies {
+    compile 'org.scala-lang:scala-library:2.12.8'
+
     compile 'net.lingala.zip4j:zip4j:1.3.2'
     compile 'io.dropwizard:dropwizard-assets:1.3.8'
     compile 'io.dropwizard:dropwizard-core:1.3.8'
