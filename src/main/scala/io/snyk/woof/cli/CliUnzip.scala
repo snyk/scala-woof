@@ -18,12 +18,14 @@ class CliUnzip() extends Command("list-zip", "lists a zip file") {
   override def configure(subparser: Subparser): Unit = subparser.addArgument("file")
     .`type`(classOf[File])
     .required(false)
-    .nargs(1)
+    .nargs("?")
 
   @throws[Exception]
   override def run(bootstrap: Bootstrap[_], namespace: Namespace): Unit = {
-    val path = namespace.getString("file")
-    if (null == path) throw new IllegalArgumentException("no file, despite default")
+    var path = namespace.getString("file")
+    if (null == path) {
+      path = "zip-slip.zip"
+    }
     val file = new File(path)
     try {
       val client = HttpClients.createDefault
